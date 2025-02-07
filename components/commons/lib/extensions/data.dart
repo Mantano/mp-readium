@@ -25,7 +25,7 @@ extension ByteDataExtension on ByteData {
 
   /// Inflates a ZIP-compressed [ByteData].
   ByteData inflate() =>
-      archive.Inflate.buffer(archive.InputStream(buffer.asUint8List()))
+      archive.Inflate.stream(archive.InputMemoryStream(buffer.asUint8List()))
           .getBytes()
           .toByteData();
 
