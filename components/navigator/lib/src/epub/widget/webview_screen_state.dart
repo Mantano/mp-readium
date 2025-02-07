@@ -13,8 +13,6 @@ import 'package:flutter/material.dart' hide Decoration;
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:mno_webview/webview.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-// #enddocregion platform_imports
-
 import 'package:mno_navigator/epub.dart';
 import 'package:mno_navigator/publication.dart';
 import 'package:mno_navigator/src/epub/decoration.dart';
@@ -140,7 +138,6 @@ class WebViewScreenState extends State<WebViewScreen> {
     });
     viewportWidthSubscription = readerContext.viewportWidthStream
         .listen((viewportWidth) => _jsApi?.setViewportWidth(viewportWidth));
-
   }
 
   @override
@@ -183,7 +180,7 @@ class WebViewScreenState extends State<WebViewScreen> {
                   url: WebUri(
                       '${widget.address}/${link.href.removePrefix("/")}')),
               initialSettings: InAppWebViewSettings(
-                isInspectable: kDebugMode && Platform.isIOS,
+                isInspectable: kDebugMode,
                 isTextInteractionEnabled: _viewerSettingsBloc
                     .viewerSettings.isTextInteractionEnabled,
                 useHybridComposition: true,
