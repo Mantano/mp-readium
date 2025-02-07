@@ -56,7 +56,7 @@ class LicenseDocument {
   final String rawJson;
   final ByteData data;
 
-  LicenseDocument._(
+  LicenseDocument(
       this.id,
       this.issued,
       this.updated,
@@ -122,7 +122,7 @@ class LicenseDocument {
       throw Exception(
           LcpError.errorDescription(LcpErrorCase.publicationLinkNotFound));
     }
-    return LicenseDocument._(id, issued, updated, provider, encryption, links,
+    return LicenseDocument(id, issued, updated, provider, encryption, links,
         rights, user!, signature, jsonObject, text, data);
   }
 

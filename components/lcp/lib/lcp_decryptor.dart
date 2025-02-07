@@ -60,6 +60,9 @@ class FullLcpResource extends TransformingResource {
   }
 }
 
+/// A LCP resource used to read content encrypted with the CBC algorithm.
+///
+/// Supports random access for byte range requests, but the resource MUST NOT be deflated.
 class CbcLcpResource extends Resource {
   static const int aesBlockSize = 16; // bytes
   final Resource resource;
@@ -91,10 +94,12 @@ class CbcLcpResource extends Resource {
                         ByteData decryptedBytes = (await license.decrypt(bytes))
                             .getOrElse((failure) => throw Exception(
                                 "Can't decrypt trailing size of CBC-encrypted stream $failure"));
+                        // Original Kotlin was: length -
+                        //            AES_BLOCK_SIZE -  // Minus IV
+                        //            decryptedBytes.last().toInt() // Minus padding size
                         return length -
-                            aesBlockSize - // Minus IV or previous block
-                            (aesBlockSize - decryptedBytes.lengthInBytes) %
-                                aesBlockSize; // Minus padding part
+                            aesBlockSize -  // Minus IV
+                            decryptedBytes.lengthInBytes - 1; // Minus padding size
                       }));
             }));
 
