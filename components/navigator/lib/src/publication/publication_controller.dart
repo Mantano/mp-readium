@@ -14,6 +14,7 @@ import 'package:mno_server/mno_server.dart';
 import 'package:mno_shared/epub.dart';
 import 'package:mno_shared/publication.dart';
 import 'package:mno_streamer/parser.dart';
+import 'package:universal_io/io.dart';
 
 abstract class PublicationController extends NavigationController {
   final Function onServerClosed;
@@ -82,6 +83,14 @@ abstract class PublicationController extends NavigationController {
           .onError((error, stackTrace) {
         if (error is UserException) {
           return PublicationTry.failure(error);
+        }
+        // We delete the file to have a chance to download it again
+        if (publicationAsset is FileAsset) {
+          FileAsset fileAsset = publicationAsset as FileAsset;
+          var file = File(fileAsset.file.path);
+          var fileSize = file.lengthSync();
+          Fimber.d("Deleting file ${publicationAsset.name}, with size: $fileSize");
+          file.deleteSync();
         }
         return PublicationTry.failure(OpeningException.unsupportedFormat);
       });
